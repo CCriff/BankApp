@@ -561,7 +561,7 @@ public class Menu {
  */
 
 	private void createAccount() {
-		String firstName, lastName, address = "", phone = "", username = "", password = "", ssn, accountType = "", jointAccount = "", jointFirstName = "", jointLastName = "", jointSSN = "" ;
+		String firstName, lastName, address = "", phone = "", ssn, jointAccount = "", jointFirstName = "", jointLastName = "", jointSSN = "", username = "", password = "",  accountType = "";
 		double initialDeposit = 0;
 		boolean valid = false;
 		boolean isEmpty = false;
@@ -738,7 +738,7 @@ public class Menu {
 			account = new Savings(initialDeposit);
 		}
 		
-		Customers customers = new Customers(firstName, lastName, jointAccount, jointFirstName, jointLastName, jointSSN, address, username, password, ssn, phone, account);
+		Customers customers = new Customers(firstName, lastName, address, phone, ssn, jointAccount, jointFirstName, jointLastName, jointSSN, account, username, password);
 		bank.addCustomers(customers);
 		System.out.println("\nYour Account Has Been Created Successfully!\n");
 		System.out.println(account); // Prints out basic account info after the account has been created
@@ -773,7 +773,7 @@ public class Menu {
 		}
 		System.out.println("Select An Account: \n");
 		for(int i = 0; i < customers.size(); i++) {
-			System.out.println((i + 1) + ") " + customers.get(i).toString());
+			System.out.println((i + 1) + ") " + customers.get(i).basicInfo());
 		}
 		
 		int account = 0;

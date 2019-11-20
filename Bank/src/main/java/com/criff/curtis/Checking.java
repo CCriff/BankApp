@@ -15,11 +15,20 @@ public class Checking extends Account {
 	
 	@Override
 	public String toString() {
-		return //"+================================================+>\n"         +
-			   "|     " + "Account Type   : " + accountType + " Account"       + "\n" + 
-			   "|     " + "Account Number : " + this.getAccountNumber()        +" \n" +
-			   "|     " + "Balance        : $"+ df2.format(this.getBalance())  + "\n" + 
-			   "|     " + "Interest Rate  : " + df2.format(this.getInterest()) + "%"  + "\n" + 
-			   "+================================================+>";
+			return    "+================================================+>\n"         +					   
+					   "|     " + "Account Type   : " + accountType + " Account"       + "\n" + 
+					   "|     " + "Account Number : " + this.getAccountNumber()        +" \n" +
+					   "|     " + "Balance        : $"+ df2.format(this.getBalance())  + "\n" + 
+					   "|     " + "Interest Rate  : " + df2.format(this.getInterest()) + "%"  + "\r" + 
+					   "+================================================+>\n";
+//			return //"+================================================+>\n"         +
+//					   "|     " + "Account Type   : " + accountType + " Account"       + "\n" + 
+//					   "|     " + "Account Number : " + this.getAccountNumber()        +" \n" +
+//					   "|     " + "Joint Account  : " + this.getJointAccountNumber()        +" \n" +
+//					   "|     " + "Balance        : $"+ df2.format(this.getBalance())  + "\n" + 
+//					   "|     " + "Interest Rate  : " + df2.format(this.getInterest()) + "%"  + "\n" + 
+//					   "+================================================+>";
+		
+		
 	} // end of toString()	
 } // end of checking class

@@ -21,20 +21,20 @@ public class Customers {
 	private String ssn;
 	private Account account;
 
-	Customers(String firstName, String lastName, String jointFirstName, String jointLastName, String jointSSN, 
-			  String username, String password, String ssn, String address, String phone, String jointAccount, Account account) {
+	Customers(String firstName, String lastName, String address, String phone, String ssn, String jointAccount, String jointFirstName, String jointLastName, String jointSSN,  Account account, String username, String password) {
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.address = address;
+		this.phone = phone;
+		this.ssn = ssn;
 		this.jointAccount = jointAccount;
 		this.jointFirstName = jointFirstName;
 		this.jointLastName = jointLastName;
 		this.jointSSN = jointSSN;
-		this.address = address;
-		this.phone = phone;
+		this.account = account;
 		this.username = username;
 		this.password = password;
-		this.ssn = ssn;
-		this.account = account;
+
 	}
 
 	@Override
@@ -50,16 +50,15 @@ public class Customers {
 				"|     " + "First Name     : " + jointFirstName + "\n" +
 				"|     " + "Last Name      : " + jointLastName + "\n" +
 				"|     " + "SSN            : " + jointSSN + "\n" +
-				"|     " +  account            + "\n" +  
-				"+================================================+>");
+				"|     " +  account            + "\n" + 
+				"+================================================+>\n");
 	}
 	
 	public String basicInfo() {
 		return("\n+================================================+>\n" + 
 			   "|     " + "First Name     : " + firstName + "\n" +
 			   "|     " + "Last Name      : " + lastName + "\n" + 
-			   "|     " +  account            + "\n" +
-			   "|     " + "Account Number : " + account.getAccountNumber() + "\n" + 
+			   "|     " +  account +
 			   "+================================================+>\n");
 	}
 	

@@ -10,8 +10,11 @@ public class Account {
 	private final String username ="", password = "";
 	private double balance = 0.00;
 	private double interest = 0.04;
+	private boolean jointAccount = false;
 	private int accountNumber;
+	private int jointAccountNumber;
 	private static int numberOfAccounts = 1000;
+	private static int numberOfJointAccounts = 2000;
 	private static DecimalFormat df2 = new DecimalFormat("#,###.00");
 	Date date = new Date();
 	
@@ -23,15 +26,9 @@ public class Account {
         return this.username.equals(username) && this.password.equals(password);
     }
 	
-//	Account acct1 = new Account();
-//	Account acct2 = new Account();
-	
-	
-	
-
-
 	Account(){
-		accountNumber = numberOfAccounts++; // set account number
+		accountNumber = numberOfAccounts++; // set primary account number
+		jointAccountNumber = numberOfJointAccounts++; // set joint account number
 	}
 	
 	/**
@@ -73,6 +70,20 @@ public class Account {
 //		this.accountNumber = accountNumber;
 //	}
 	
+//	/**
+//	 * @param jointAccountNumber the jointAccountNumber to set
+//	 */
+//	public void setJointAccountNumber(int jointAccountNumber) {
+//		this.jointAccountNumber = jointAccountNumber;
+//	}
+	
+	/**
+	 * @return the jointAccountNumber
+	 */
+	public int getJointAccountNumber() {
+		return jointAccountNumber;
+	}
+	
 	/**
 	 * @return the transactionsList
 	 */
@@ -86,6 +97,21 @@ public class Account {
 	public void setTransactionsList(ArrayList<String> transactionsList) {
 		this.transactionsList = transactionsList;
 	}
+	
+	/**
+	 * @return the jointAccount
+	 */
+	public boolean getJointAccount() {
+		return jointAccount;
+	}
+
+	/**
+	 * @param jointAccount the jointAccount to set
+	 */
+	public void setJointAccount(boolean jointAccount) {
+		this.jointAccount = jointAccount;
+	}
+	
 	
 	public void withdrawal(double amount) {
 		if(amount + 5 > balance) {
@@ -135,12 +161,11 @@ public class Account {
 	} // end of withdrawal method
 	
 	public void checkInterest(){
-    	if(balance > 10000) {
+    	if(balance > 9999) {
     		interest = 0.08;
     	} else {
     		interest = 0.04;
     	}
     }
-	
 
 } // end of account class
