@@ -1,5 +1,10 @@
 package com.criff.curtis;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -19,24 +24,154 @@ public class Menu {
 	
 	public static void main(String[] args) {
 		
-		Menu menu = new Menu();  // create main login menu
+		
+/*
+ * =========================================================Connect-Database==================================================	
+ */		
+		// Connect to postgreSQL database		
+		try (Connection connection = DriverManager.getConnection("jdbc:postgresql://bankapp.cua8a0jy3iil.us-east-2.rds.amazonaws.com/", "postgres", "lost1soul")) {
+			 
+            System.out.println("Connecting To The BANK OF CRIFF\n");
+            // When this class first attempts to establish a connection, it automatically loads any JDBC 4.0 drivers found within 
+            // the class path. Note that your application must manually load any JDBC drivers prior to version 4.0.
+//          Class.forName("org.postgresql.Driver"); 
+ 
+            System.out.println("Connected To The BANK OF CRIFF'S PostgreSQL Database!\n");
+            Statement statement = connection.createStatement();
+            System.out.println("Reading Bank Records...\n");
+            System.out.printf("%-30.30s  %-30.30s%n", "First Name", "SSN");
+            ResultSet resultSet = statement.executeQuery("select * from customer;");
+            while (resultSet.next()) {
+                System.out.printf("%-30.30s  %-30.30s%n", resultSet.getString("first_name"), resultSet.getString("ssn"));
+                
+            }
+            
+            System.out.println("\nConnected Successfully!");          
+            
+        } /*catch (ClassNotFoundException e) {
+            System.out.println("PostgreSQL JDBC driver not found.");
+            e.printStackTrace();
+        }*/ catch (SQLException e) {
+            System.out.println("Connection failure.");
+            e.printStackTrace();
+        }
+		
+		
+		
+/*
+ * =========================================================CREATE-MENUS==================================================	
+ */		
+		Menu menuLogin = new Menu();  // create main login menu
+		Menu menu = new Menu();  // create main menu
 		Menu menu2 = new Menu(); // create employee menu
 		Menu menu3 = new Menu(); // create customer menu
 		Menu menu4 = new Menu(); // create Manager menu
 		
+		menuLogin.runLoginMenu(); // runs log in menu
 		menu.runMenu();  // runs main menu
 		menu2.runMenu(); // runs employee menu
 		menu3.runMenu(); // runs customer menu
 		menu4.runMenu(); // runs manager menu
 		
-		// Test Main Methods
-		//Customers me = new Customers("Curtis", "Criff", "username", "password", "123456789", "31878965432", "123 Home Street", null);
-		
+
+    
 	} // end of main
 
 /*
- * =========================================================MAIN-MENU==================================================	
+ * =========================================================Login-MENU==================================================	
  */	
+	
+	// Run Login Menu... Also used as log out method...	
+	public void runLoginMenu() {
+		printLoginHeader(); // runs Log in header
+		printLoginMenu();
+		while(!quit) {
+			int loginChoice = getLoginInput(); // gets user input
+			performLoginAction(loginChoice);	// performs actions based on user input		
+		}		
+	} // end of run Login Menu
+	
+	// Print Login message
+	private void printLoginHeader() {
+		System.out.println("");
+		System.out.println("+--------------------------+");
+		System.out.println("|      PLEASE LOG IN       |");
+		System.out.println("|    TO USE THIS SYSTEM    |");
+		System.out.println("+--------------------------+");
+		System.out.println("");		
+	} // end of print Login Header
+				
+	// Print Login Menu
+	private void printLoginMenu() {
+		System.out.println("Please Make A Selection From The Menu Below:\n");
+		System.out.println("1) LOG-IN");
+		System.out.println("0) Exit\n");
+	} // end of Login Type
+	
+	// get user input
+	private int getLoginInput() {
+		int loginChoice = -1;
+		do {
+			System.out.print("Enter Your Choice: \n");
+			try {
+				loginChoice = Integer.parseInt(scan.nextLine());				
+			}
+			catch(NumberFormatException e) {
+				System.out.println("Invalid Selection. Please Use The Numberpad To Make A Selection.");
+			}
+			if(loginChoice < 0 || loginChoice > 1) {
+				System.out.println("Choice Is Outside Of Range. Please Pick Another Option");
+			}			
+		}
+		while(loginChoice < 0 || loginChoice > 1);		
+		return loginChoice;		
+	} // end of get Login Input
+	
+	// performs actions based on user input
+	private void performLoginAction(int loginChoice) {
+		switch(loginChoice) {	
+			case 0:
+				// exit application
+				System.out.println("Thank You For Using The Bank Of CRIFF Banking App. Have A Nice Day!");
+				System.exit(0);
+				break;
+			case 1:
+				// run login()/menu();
+				login();
+				break;
+			default:
+				System.out.println("Unknown Error Has Occurred.\n");			
+			} // end of switch case for log in		
+		} // end of performAction for log in
+	
+	private void login() {
+		
+		
+		runMenu();
+		
+//		int credentials = -1;
+//		do {
+//			System.out.print("Please Enter Your Account Number or Username: \n");
+//			try {
+//				credentials = (int) Integer.parseInt(scan.nextLine());				
+//			}
+//			catch(NumberFormatException e) {
+//				System.out.println("Invalid Selection. Please Use The Numberpad To Make A Selection.");
+//			}
+//			if(credentials < 0 || credentials > 4) {
+//				System.out.println("Choice Is Outside Of Range. Please Pick Another Option");
+//			}			
+//		}
+//		while(credentials < 0 || credentials > 4);		
+//		return credentials;	
+		
+		
+	}
+
+/*
+ * =========================================================MAIN-MENU==================================================	
+ */		
+	
 	
 	// Run Main Menu 	
 	public void runMenu() {
@@ -46,7 +181,7 @@ public class Menu {
 			int choice = getInput(); // gets user input
 			performAction(choice);	// performs actions based on user input		
 		}		
-	} // end of runMenu
+	} // end of run Menu
 	
 	// Print Welcome message
 	private void printHeader() {
@@ -58,15 +193,17 @@ public class Menu {
 		System.out.println("");		
 	} // end of printHeader
 	
-	// Print Login Menu
+	// Print Select Type of User Menu
 	private void printLoginType() {
 		System.out.println("Please Make A Selection From The Menu Below:\n");
 		System.out.println("1) Are You An Employee?");
 		System.out.println("2) Are You A Customer?");
 		System.out.println("3) Are You A Bank Administrator?");
+		System.out.println("4) Log Out");
 		System.out.println("0) Exit\n");
-	} // end of Login Type
+	} // end of Select Type of User Menu
 	
+	// Get User input
 	private int getInput() {
 		int choice = -1;
 		do {
@@ -77,11 +214,11 @@ public class Menu {
 			catch(NumberFormatException e) {
 				System.out.println("Invalid Selection. Please Use The Numberpad To Make A Selection.");
 			}
-			if(choice < 0 || choice > 3) {
+			if(choice < 0 || choice > 4) {
 				System.out.println("Choice Is Outside Of Range. Please Pick Another Option");
 			}			
 		}
-		while(choice < 0 || choice > 3);		
+		while(choice < 0 || choice > 4);		
 		return choice;		
 	} // end of getInput
 	
@@ -105,6 +242,10 @@ public class Menu {
 			// run Administrator/Manager login()/menu();
 			runMenu4();
 			break;
+		case 4:
+			// Go Back To Login Menu();
+			runLoginMenu();		
+            break;
 		default:
 			System.out.println("Unknown Error Has Occurred.\n");			
 		} // end of switch case for log in		
@@ -140,6 +281,7 @@ public class Menu {
 		System.out.println("2) Deny A Application");
 		System.out.println("3) View An Account Information"); // view customers basic info
 		System.out.println("4) Go Back To Main Menu");
+		System.out.println("5) Log Out");
 		System.out.println("0) Exit\n");			
 	} // end of printMenu for employee
 	
@@ -157,11 +299,11 @@ public class Menu {
 			catch(NonDigitNumberException e) {
 				e.printStackTrace();
 			}
-			if(choice2 < 0 || choice2 > 4) {
+			if(choice2 < 0 || choice2 > 5) {
 				System.out.println("Choice Is Outside Of Range. Please Pick Another Option.\n");
 			}			
 		}
-		while(choice2 < 0 || choice2 > 4);		
+		while(choice2 < 0 || choice2 > 5);		
 		return choice2;		
 	} // end of getInput2 for employees
 	
@@ -190,6 +332,10 @@ public class Menu {
 		case 4:
 			// Go Back To Main Menu();
 			runMenu();		
+            break;
+		case 5:
+			// Go Back To Login Menu();
+			runLoginMenu();		
             break;
 		default:
 			System.out.println("Unknown Error Has Occurred.");			
@@ -230,6 +376,7 @@ public class Menu {
 		System.out.println("4) Tranfer Funds");		
 		System.out.println("5) Check Account Information");
 		System.out.println("6) Go Back To Main Menu");
+		System.out.println("7) Log Out");
 		System.out.println("0) Exit\n");		
 		} // end of printMenu for customers
 	
@@ -244,11 +391,11 @@ public class Menu {
 			catch(NumberFormatException e) {
 				System.out.println("Invalid Selection. Please Use The Numberpad To Make A Selection.");
 			}
-			if(choice3 < 0 || choice3 > 6) {
+			if(choice3 < 0 || choice3 > 7) {
 				System.out.println("Choice Is Outside Of Range. Please Pick Another Option");
 			}			
 		}
-		while(choice3 < 0 || choice3 > 6);		
+		while(choice3 < 0 || choice3 > 7);		
 		return choice3;		
 	} // end of getInput from customers
 	
@@ -285,6 +432,10 @@ public class Menu {
 		case 6:
 			// check balance();
 			runMenu();		
+            break;
+		case 7:
+			// Go Back To Login Menu();
+			runLoginMenu();		
             break;
 		default:
 			System.out.println("Unknown Error Has Occurred.");			
@@ -327,6 +478,7 @@ public class Menu {
 			System.out.println("7) Edit Account Information"); 
 			System.out.println("8) Cancel Accout");
 			System.out.println("9) Go Back To Main Menu");
+			System.out.println("10) Log Out");
 			System.out.println("0) Exit\n");			
 		} // end of printMenu for ADMINS
 		
@@ -341,11 +493,11 @@ public class Menu {
 				catch(NumberFormatException e) {
 					System.out.println("Invalid Selection. Please Use The Numberpad To Make A Selection.");
 				}
-				if(choice4 < 0 || choice4 > 9) {
+				if(choice4 < 0 || choice4 > 10) {
 					System.out.println("Choice Is Outside Of Range. Please Pick Another Option");
 				}			
 			}
-			while(choice4 < 0 || choice4 > 9);		
+			while(choice4 < 0 || choice4 > 10);		
 			return choice4;		
 		} // end of getInput from ADMINS
 		
@@ -394,7 +546,11 @@ public class Menu {
 			case 9:
 				// Go Back To Main Menu();
 				runMenu();		
-	            break;  
+	            break;
+			case 10:
+				// Go Back To Login Menu();
+				runLoginMenu();		
+	            break;
 			default:
 				System.out.println("Unknown Error Has Occurred.");			
 			} // end of switch case for ADMINS		
@@ -632,7 +788,7 @@ public class Menu {
 			System.out.println("Invalid Account Selected.");
 			account = -1;
 		}
-		return account;
+		return 0;
 	}
 	
 	private int selectTransferAccount() {
@@ -646,7 +802,7 @@ public class Menu {
 		for(int i = 0; i < customers.size(); i++) {
 			System.out.println((i + 1) + ") " + customers.get(i).basicInfo());
 		}
-		
+		double amount = 0;
 		int account = 0;
 		System.out.print("Please Enter Your Selection: ");
 		try {
@@ -659,7 +815,8 @@ public class Menu {
 			System.out.println("Invalid Account Selected.");
 			account = -1;
 		}
-		return account;
+		bank.getCustomers(account).getAccount().withdrawal(amount);
+		return 0;
 	}
 
 	private int selectTransferAccount2() {
@@ -686,7 +843,8 @@ public class Menu {
 			System.out.println("Invalid Account Selected.");
 			account = -1;
 		}
-		return account;
+		
+		return 0;
 	}
 
 
@@ -720,11 +878,11 @@ public class Menu {
 				amount = 0;
 			}
 			
-			Account acct1 = new Account();
-			Account acct2 = new Account();
 			
-			acct1.transfer(acct2, amount);
-			this.makeWithdrawal();
+//			bank.getCustomers(account).getAccount().withdrawal(amount);
+//			this.bank.getCustomers(account).getAccount().deposit(amount);
+//			acct1.transfer(acct2, amount);
+//			this.makeWithdrawal();
 			
 //			System.out.print("Which Account Do You Want To Transfer " + "$" + df2.format(amount) + " To? ");
 //			int account2 = selectTransferAccount2();

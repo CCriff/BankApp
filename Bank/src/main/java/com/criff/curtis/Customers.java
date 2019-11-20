@@ -1,7 +1,13 @@
 package com.criff.curtis;
 
+import java.io.Serializable;
+
 public class Customers {
 
+	/**
+	 * 
+	 */
+	//private static final long serialVersionUID = 1L;
 	private String firstName;
 	private String lastName;
 	private String jointAccount = "";

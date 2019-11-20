@@ -95,7 +95,7 @@ public class Account {
 		checkInterest(); // reset interest rate each time you make a withdrawal
 		
 		balance -= amount + 5; // adds a $5 fee for withdrawals... 
-		System.out.println("\n$" + df2.format(amount) + " Has Been Withdrawn From Your Account With Account Number: " + accountNumber + " \\ And Incurred A Bank Fee Of $5.\n");
+		System.out.println("\n$" + df2.format(amount) + " Has Been Withdrawn From Your Account With Account Number: " + accountNumber + " And Incurred A Bank Fee Of $5.\n");
         System.out.println("\n$" + df2.format(balance) + " Is Your New Balance.\n" );
         transactionsList.add("Time: " + date.toString() + " Withdrawal Amount: " + "$" + df2.format(amount) + " New Balance: " + "$" + df2.format(balance) + accountNumber);
         
@@ -122,16 +122,13 @@ public class Account {
 	public void transfer(Account acct, double amount) {
 		if(amount > balance) {
 			System.out.println("Transaction Cannot Be Completed. You Have Insuffient Funds.");
-		}
+		}		
+		 balance = amount;
+		 acct.deposit(amount);
+		 this.withdrawal(amount);
 		
-		
-		
-		// balance = amount;
-		// acct.deposit(amount);
-		// this.withdrawal(amount);
-		
-		System.out.println("\n$" + df2.format(amount) + " Has Been Transferred From Your Account With Account Number: " + this.accountNumber + " "
-				         + "And Has Been Deposited into" + getAccountNumber());
+		System.out.println("\n$" + df2.format(amount) + " Has Been Transferred From Your Account With Account Number: " + this.accountNumber
+				         + " And Has Been Deposited into Account With Account Number: " + getAccountNumber());
         System.out.println("\n$" + df2.format(balance) + " Is Your New Balance.\n" );
         transactionsList.add("Time: " + date.toString() + " Withdrawal Amount: " + "$" + df2.format(amount) + " New Balance: " + "$" + df2.format(balance) + accountNumber);
         
